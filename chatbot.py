@@ -1,12 +1,9 @@
 import httpx
-import streamlit as st  # ✅ Import streamlit to use st.secrets
+import os
+from dotenv import load_dotenv
 
-# No need for dotenv in deployment
-# from dotenv import load_dotenv
-# load_dotenv()
-# GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
-GROQ_API_KEY = st.secrets["GROQ_API_KEY"]  # ✅ Use secrets directly
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 def chat_with_groq(messages, model="llama3-70b-8192"):
     url = "https://api.groq.com/openai/v1/chat/completions"
