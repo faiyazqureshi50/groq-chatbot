@@ -4,47 +4,66 @@ from chatbot import chat_with_groq
 
 st.set_page_config(page_title="💬 Groq Chatbot", layout="centered")
 
+# Custom CSS for styling
 st.markdown("""
     <style>
-        body {
+        html, body, [class*="css"] {
             font-family: 'Segoe UI', sans-serif;
+            background-color: #f9fafb;
         }
+
         .stChatMessage {
-            max-width: 100%;
             word-wrap: break-word;
         }
+
         .message-container {
             background-color: #f1f2f6;
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin-bottom: 10px;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 10px 0;
+            line-height: 1.6;
+            font-size: 16px;
         }
-        .assistant {
-            background-color: #dff9fb;
-        }
+
         .user {
-            background-color: #c7ecee;
+            background-color: #cfe9ff;
+            text-align: right;
         }
+
+        .assistant {
+            background-color: #e8f5e9;
+        }
+
         @media only screen and (max-width: 600px) {
             .message-container {
-                font-size: 16px;
+                font-size: 17px;
             }
+        }
+
+        /* Chat bubble alignment */
+        .st-emotion-cache-1c7y2kd {
+            flex-direction: column-reverse;
         }
     </style>
 """, unsafe_allow_html=True)
 
+# Title & caption
 st.title("🤖 Groq Chatbot")
-st.caption("Powered by **LLaMA 3-70B via Groq** — Blazing fast.")
+st.caption("Powered by **LLaMA 3-70B via Groq** — Blazing fast and conversational.")
 
+# Initialize session state
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": "You are a helpful assistant."}]
 
-# Render previous chat messages
+# Display chat history
 for msg in st.session_state.messages[1:]:
     with st.chat_message(msg["role"]):
-        st.markdown(f"<div class='message-container {msg['role']}'>" + msg["content"] + "</div>", unsafe_allow_html=True)
+        st.markdown(
+            f"<div class='message-container {msg['role']}'>{msg['content']}</div>",
+            unsafe_allow_html=True,
+        )
 
-# Input box
+# Chat input
 if user_input := st.chat_input("Ask me anything..."):
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
@@ -53,8 +72,9 @@ if user_input := st.chat_input("Ask me anything..."):
     with st.chat_message("assistant"):
         placeholder = st.empty()
         full_response = ""
-        for word in chat_with_groq(st.session_state.messages).split():
-            full_response += word + " "
+        response_text = chat_with_groq(st.session_state.messages)
+        for char in response_text:
+            full_response += char
             placeholder.markdown(f"<div class='message-container assistant'>{full_response}</div>", unsafe_allow_html=True)
-            time.sleep(0.03)
+            time.sleep(0.015)  # Typing animation speed
         st.session_state.messages.append({"role": "assistant", "content": full_response})
