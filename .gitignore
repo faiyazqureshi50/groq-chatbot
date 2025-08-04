@@ -1,0 +1,15 @@
+# Ignore the virtual environment folder
+genv/
+env/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.dll
+*.pdb
+*.exe
+*.so
+*.dylib
+*.DS_Store
+.vscode/
+.idea/
